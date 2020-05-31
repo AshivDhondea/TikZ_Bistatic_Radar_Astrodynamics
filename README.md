@@ -6,10 +6,8 @@ This repo contains LaTeX files which draw figures in radar (more specifically, b
 ## Mission Planning Tool for Space Debris Studies with the MeerKAT Radar
 I created these figures for my master's dissertation [Mission Planning Tool for Space Debris Studies with the MeerKAT radar](https://open.uct.ac.za/handle/11427/29617). Some of these figures also featured in a [conference paper](https://ieeexplore.ieee.org/document/8835735) presented at the 2019 IEEE Radar Conference (RadarConf) in Boston, USA. The source files for the conference paper are in a [public repo](https://github.com/AshivDhondea/ashiv_2019_radar_conf).
 
-![Bistatic radar configuration: tracking space debris](https://github.com/AshivDhondea/TikZ_Bistatic_Radar_Astrodynamics/blob/master/img/bistatic.png)
-
 Bistatic radar configuration: tracking space debris
-<img src="https://github.com/AshivDhondea/TikZ_Bistatic_Radar_Astrodynamics/blob/master/img/bistatic.png" width="128">
+<img src="https://github.com/AshivDhondea/TikZ_Bistatic_Radar_Astrodynamics/blob/master/img/bistatic.png" width="256">
 
 ![Keplerian elements for a Resident Space Object such as space debris](https://github.com/AshivDhondea/TikZ_Bistatic_Radar_Astrodynamics/blob/master/img/keplerians.png)
 
