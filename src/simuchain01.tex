@@ -1,0 +1,78 @@
+\documentclass[landscape,12pt]{standalone}
+\usepackage[utf8x]{inputenc} % utf8 encoding
+\usepackage[T1]{fontenc} % use T1 fonts
+\usepackage{bm} % bold math
+\usepackage[dvipsnames]{xcolor}   
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,shadows}
+\usepackage{amsmath,bm,times,amssymb}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\usetikzlibrary{decorations.pathmorphing} % for snake lines
+\usetikzlibrary{matrix} % for block alignment
+\usetikzlibrary{calc} % for manimulation of coordinates
+
+% TikZ styles for drawing
+\tikzstyle{block} = [draw,rectangle,thick,minimum height=4.3em,minimum width=12.5em,  text width=12.4em,text centered,drop shadow, fill =Melon!20]
+\tikzstyle{sum} = [draw,circle,inner sep=0mm,minimum size=2mm]
+\tikzstyle{connector} = [->,thick]
+\tikzstyle{line} = [thick]
+\tikzstyle{branch} = [circle,inner sep=0pt,minimum size=1mm,fill=black,draw=black]
+\tikzstyle{guide} = []
+\tikzstyle{snakeline} = [connector, decorate, decoration={pre length=0.2cm,
+                         post length=0.2cm, snake, amplitude=.4mm,
+                         segment length=2mm},thick, OliveGreen, ->]
+
+\renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}} % bold vectors
+\def \myneq {\skew{-2}\not =} % \neq alone skews the dash
+
+\begin{document}
+
+  \begin{tikzpicture}[scale=1, auto, >=stealth']
+    \small
+    % node placement with matrix library: 5x4 array
+    \matrix[ampersand replacement=\&, row sep=0.2cm, column sep=0.5cm] {
+      %
+      \node[block] (F1) {\textbf{TLE set acquisition}}; \&
+      \&
+      \node[block] (f1) {\textbf{Orbit Propagation}}; \& 
+      \&
+      \node[block] (f2) {\textbf{Passage identification}};\&
+      \&
+      \node[block] (f4) {\textbf{Sensor scheduling}};\&
+      \&
+      \node[block] (f3) {\textbf{Measurements prediction}};\&
+      \&
+      \node[block] (f5) {\textbf{Orbit Determination}};\&
+      \\
+      \node[guide] (i1) {}; \& \& \& \& \\
+    };
+
+    % now link the nodes
+   % \draw [line] (F1) -- (u1);
+    \draw [connector] (F1) -- node {} (f1);
+    %\draw [connector] (f1) -- node {} (F1);
+%     \node[draw = none]  at  ($(f1.east) - (-0.2cm,0cm)$){$\mathbf{y}$};
+    \draw [connector] (f1) -- node {} (f2);
+    \draw [connector] (f2) -- node {} (f4);
+    \draw [connector] (f4) -- node {} (f3);
+    \draw [connector] (f3) -- node {} (f5);
+%    \draw [connector] (f5) -- node {} (f4);
+%    \draw [connector] (f2.east) -- node{\color{Black} $\hat{\mathbf{x}}[k],\hat{\mathbf{P}}[k]$}($(f2.east) - (-1.9cm,0cm)$)  ;
+%    
+%    \draw[connector]  (f1.south) --  ($(f1.south) - (0cm,0.8cm)$) -- node{\color{Black} $\mathbf{R}[k]$} ($(f2.south) - (0cm,0.8cm)$)  -- (f2.south);
+%
+ \draw[Red,very thick,dotted] ($(F1.north west)+(-0.4,0.6)$)  rectangle ($(f1.south east)+(0.4,-0.6)$) node[below=12pt,left=140pt]{\textbf{Chapter 3}};
+
+\draw[MidnightBlue,very thick,dotted] ($(f2.north west)+(-0.3,0.6)$)  rectangle ($(f3.south east)+(0.4,-0.6)$) node[below=12pt,left=230pt]{\textbf{Chapter 4}};
+
+\draw[OliveGreen, very thick,dotted] ($(f5.north west)+(-0.3,0.6)$)  rectangle ($(f5.south east)+(0.4,-0.6)$) node[below=12pt,left=50pt]{\textbf{Chapter 5}};
+
+  \end{tikzpicture}
+
+\end{document}

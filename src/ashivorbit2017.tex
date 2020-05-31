@@ -1,0 +1,73 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,amsmath}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{shapes,calc,positioning}
+
+\begin{document}
+
+\tdplotsetmaincoords{75}{95}
+%
+\pgfmathsetmacro{\rvec}{.8}
+\pgfmathsetmacro{\thetavec}{40}
+\pgfmathsetmacro{\omegavec}{35}
+%
+
+
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0);
+\draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x_\text{ECEF}$};
+\draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y_\text{ECEF}$};
+\draw[thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z_\text{ECEF}$};
+
+\tdplotsetcoord{P}{\rvec}{\thetavec}{\omegavec}
+\draw[-stealth,thick,color=Red] (O) -- (P);
+\draw[dashed,thick, color=Red, shorten >=-20pt ] (O) -- (Pxy);
+\tdplotdrawarc[->]{(O)}{0.3}{0}{\omegavec}{anchor=north}{$\lambda$}
+\tdplotdrawarc[Gray]{(O)}{0.8}{-90}{90}{}{}
+\tdplotdrawarc[dashed,Gray]{(O)}{0.8}{90}{270}{}{}
+%
+\tdplotsetthetaplanecoords{\omegavec}
+\tdplotdrawarc[tdplot_rotated_coords,<-]{(0,0,0)}{0.4}{\thetavec}%
+{90}{right}{$\phi_\text{gc}$}
+\tdplotdrawarc[tdplot_rotated_coords]{(0,0,0)}{0.8}
+{0}{90}{}{}
+%
+\tdplotsetthetaplanecoords{0}
+\tdplotdrawarc[tdplot_rotated_coords]{(0,0,0)}{0.8}{0}{90}{left}{\rotatebox[origin=cc]{85}{Prime Meridian}}
+%
+\tdplotsetthetaplanecoords{90}
+\tdplotdrawarc[tdplot_rotated_coords,Gray]{(0,0,0)}{0.8}
+{0}{360}{}{}
+%
+\tdplotsetrotatedcoords{\omegavec}{\thetavec}{0}
+\tdplotsetrotatedcoordsorigin{(P)}
+
+%\draw[thick,tdplot_rotated_coords,-,draw=Blue,fill=white] (-0.1,-0.1,0)
+%-- (-0.1,0.1,0) -- (0.1,0.1,0)  -- (0.1,-0.1,0)  -- cycle  ;
+
+\draw[thick,tdplot_rotated_coords,->,RoyalBlue] (0,0,0)
+-- (0.5,0,0) node[anchor=west]{South};
+\draw[thick,tdplot_rotated_coords,->,RoyalBlue] (0,0,0)
+-- (0,0.5,0) node[anchor=south]{East};
+\draw[thick,tdplot_rotated_coords,->,RoyalBlue] (0,0,0)
+-- (0,0,0.5) node[anchor=south]{Zenith};
+\node[anchor=east,tdplot_rotated_coords,RoyalBlue] at (0,-0.1,0){\textbf{Rx}};
+
+
+% 09 March 2017
+%draw some vector, and its projection, in the rotated coordinate frame
+\draw[-stealth,thick,color=Green,tdplot_rotated_coords] (0,0,0) -- (.5,.5,.5)node[anchor=west]{\textbf{RSO}};
+%\draw[black,tdplot_rotated_coords] (.3,.3,.3) node[anchor=north west]{$\rho$};
+\draw[dashed,thick,color=Green,tdplot_rotated_coords] (0,0,0) -- (.5,.5,0);
+\draw[dashed,thick,color=Green,tdplot_rotated_coords] (.5,.5,0) -- (.5,.5,.5);
+
+%%draw theta arc and label
+%\tdplotdrawarc[tdplot_rotated_coords,color=black,->]{(0,0,0)}{0.1}{0}{45}{anchor=north west,color=black}{$\psi$}
+%\tdplotsetrotatedthetaplanecoords{45}
+%
+%%draw theta arc and label
+%\tdplotdrawarc[tdplot_rotated_coords,color=black,->]{(0,0,0)}{0.25}{90}{55}{anchor=west,color=black}{$\theta$}
+\end{tikzpicture}
+
+\end{document}

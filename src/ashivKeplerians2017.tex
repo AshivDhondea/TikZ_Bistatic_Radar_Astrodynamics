@@ -1,0 +1,71 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[usenames, dvipsnames]{xcolor}
+\usepackage{tikz,amsmath}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{shapes,calc,positioning,arrows,intersections}
+
+\begin{document}
+
+\tdplotsetmaincoords{75}{95}
+%
+\pgfmathsetmacro{\rvec}{.8}
+\pgfmathsetmacro{\thetavec}{40}
+\pgfmathsetmacro{\omegavec}{35}
+\pgfmathsetmacro{\raan}{45} % RAAN
+\pgfmathsetmacro{\w}{90} % Argument of perigee
+\pgfmathsetmacro{\incli}{60} % Inclination
+\pgfmathsetmacro{\trueanom}{15} % True anomaly
+%\pgfmathsetmacro{\sine}{\rvec*cos(\raan)*sin(-\incli)}
+%\pgfmathsetmacro{\cosine}{\rvec*cos(\raan)*cos(-\incli)}
+%
+\definecolor{darkgreen}{rgb}{0.1,0.7,0.1}
+
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0)node[anchor = east]{$0$};
+%
+\tdplotsetthetaplanecoords{\raan}
+\tdplotdrawarc[gray,fill =Gray,fill opacity=0.05]{(O)}{\rvec}{-90}{90}{}{}
+\tdplotdrawarc[dashed,Gray,fill=Gray,fill opacity =0.05]{(O)}{\rvec}{90}{270}{}{}
+\tdplotsetcoord{P}{\rvec}{90}{35}
+
+\draw[dashed,Red] (0,0,0) -- (P) node[anchor=north west]{};
+\draw[Black] (P) node[anchor=north west]{ascending node};
+
+% Draw coordinate axes
+\draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x_\text{ECEF}$};
+\draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y_\text{ECEF}$};
+\draw[thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z_\text{ECEF}$};
+\node[draw = none] at (-0.5,-1.0) {equatorial plane};
+% Draw orbit
+\tdplotsetrotatedcoords{\raan}{-\incli}{0}
+\tdplotdrawarc[RoyalBlue,tdplot_rotated_coords,fill =CornflowerBlue,fill opacity=0.05,thick]{(O)}{\rvec}{-90}{270}{}{}
+\node[draw = none] at (0.2,-0.2,-0.4) {\color{RoyalBlue} orbital plane};
+%draw the angle \phi, and label it
+%syntax: \tdplotdrawarc[coordinate frame, draw options]{center point}{r}{angle}{label options}{label}
+\tdplotsetcoord{Q}{\rvec}{90}{\raan};
+\tdplotsetcoord{R}{\rvec}{85}{42};
+%\draw[dashed,blue] (0,0,0) -- (Q) node[]{};
+\tdplotdrawarc[->]{(O)}{0.2}{0}{35}{anchor=north}{$\Omega$}
+\draw[->](Q) -- (R) node[anchor=west]{$i$};
+%
+\tdplotdrawarc[<-,tdplot_rotated_coords]{(O)}{0.3}{35}{\w+32}{anchor=east}{$\omega$}
+\tdplotsetcoord{S}{\rvec}{\raan}{90}
+\draw[dashed,OliveGreen] (0,0,0) -- (S) node[anchor = south west]{};
+\draw[Black] (S) node[anchor=south west]{perigee};
+
+
+\tdplotsetcoord{SO}{\rvec-0.05}{\raan}{140}
+\tdplotsetcoord{SOt}{\rvec-0.09}{\raan}{140}
+\tdplotsetcoord{SOtt}{\rvec*0.7}{\raan}{140}
+
+%\draw[thin,red] (SO) circle(0.1);
+\draw[thick,arrows=->,BurntOrange] (0,0,0) -- (SOt) node[anchor= east]{};;
+\draw[BurntOrange] (SOtt) node[anchor=east]{$\vec{r}$};
+\node[draw=Purple,shape=circle,fill=Purple] (0.005) at (SO){};
+\draw[Black] (SO) node[anchor=south west]{RSO};
+
+\tdplotdrawarc[->,tdplot_rotated_coords]{(O)}{0.4}{35}{-\w+100}{anchor=south west}{$\nu$}
+
+\end{tikzpicture}
+
+\end{document}

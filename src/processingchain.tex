@@ -1,0 +1,74 @@
+\documentclass[landscape,12pt]{standalone}
+\usepackage[utf8x]{inputenc} % utf8 encoding
+\usepackage[T1]{fontenc} % use T1 fonts
+\usepackage{bm} % bold math
+\usepackage[dvipsnames]{xcolor}   
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,shadows}
+\usepackage{amsmath,bm,times,amssymb}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\usetikzlibrary{decorations.pathmorphing} % for snake lines
+\usetikzlibrary{matrix} % for block alignment
+\usetikzlibrary{calc} % for manimulation of coordinates
+
+% TikZ styles for drawing
+\tikzstyle{block} = [draw,rectangle,thick,minimum height=4.3em,minimum width=12.5em,  text width=12.4em,text centered,drop shadow, fill =Melon!20]
+\tikzstyle{sum} = [draw,circle,inner sep=0mm,minimum size=2mm]
+\tikzstyle{connector} = [->,thick]
+\tikzstyle{line} = [thick]
+\tikzstyle{branch} = [circle,inner sep=0pt,minimum size=1mm,fill=black,draw=black]
+\tikzstyle{guide} = []
+\tikzstyle{snakeline} = [connector, decorate, decoration={pre length=0.2cm,
+                         post length=0.2cm, snake, amplitude=.4mm,
+                         segment length=2mm},thick, OliveGreen, ->]
+
+\renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}} % bold vectors
+\def \myneq {\skew{-2}\not =} % \neq alone skews the dash
+
+\begin{document}
+
+  \begin{tikzpicture}[scale=1, auto, >=stealth']
+    \small
+    % node placement with matrix library: 5x4 array
+    \matrix[ampersand replacement=\&, row sep=0.2cm, column sep=0.5cm] {
+      %
+      \node[block] (F1) {\textbf{Generate trajectory}}; \&
+      \&
+      \node[block] (f1) {\textbf{Perform sensor scheduling}}; \& 
+      \&
+      \node[block] (f2) {\textbf{Write trajectory data to file}};\&
+      \&
+      \node[block] (f3) {\textbf{Import data into FERS}};\&
+      \&
+      \node[block] (f5) {\textbf{Add tasking parameters to FERS simulation}};\&
+      \&
+      \node[block] (f4) {\textbf{Do radar signal processing}};\&
+      \\
+      \node[guide] (i1) {}; \& \& \& \& \\
+    };
+
+    % now link the nodes
+   % \draw [line] (F1) -- (u1);
+    \draw [connector] (F1) -- node {} (f1);
+    %\draw [connector] (f1) -- node {} (F1);
+%     \node[draw = none]  at  ($(f1.east) - (-0.2cm,0cm)$){$\mathbf{y}$};
+    \draw [connector] (f1) -- node {} (f2);
+    \draw [connector] (f2) -- node {} (f3);
+    \draw [connector] (f3) -- node {} (f5);
+    \draw [connector] (f5) -- node {} (f4);
+%    \draw [connector] (f2.east) -- node{\color{Black} $\hat{\mathbf{x}}[k],\hat{\mathbf{P}}[k]$}($(f2.east) - (-1.9cm,0cm)$)  ;
+%    
+%    \draw[connector]  (f1.south) --  ($(f1.south) - (0cm,0.8cm)$) -- node{\color{Black} $\mathbf{R}[k]$} ($(f2.south) - (0cm,0.8cm)$)  -- (f2.south);
+%
+
+
+
+  \end{tikzpicture}
+
+\end{document}

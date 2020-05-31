@@ -1,0 +1,88 @@
+% 4 May 2017
+% azimuth and elevation beamwidth visualization
+
+% April 2017
+\documentclass{standalone}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc,fadings,decorations.pathreplacing,arrows}
+\usetikzlibrary{angles,quotes}
+
+\begin{document}
+	
+	%set the plot display orientation
+	%syntax: \tdplotsetdisplay{\theta_d}{\phi_d} el, azim
+	\tdplotsetmaincoords{70}{65}
+	\pgfmathsetmacro{\rvec}{14}
+	\pgfmathsetmacro{\rve}{11}
+	\pgfmathsetmacro{\rveinner}{4}
+	\pgfmathsetmacro{\elh}{3}
+	\pgfmathsetmacro{\elhang}{atan(\elh/\rve)}
+	\pgfmathsetmacro{\azim}{\elhang}
+	\pgfmathsetmacro{\xcomp}{\rve*cos(\azim)}
+	\pgfmathsetmacro{\ycomp}{\rve*sin(\azim)}
+	
+	\pgfmathsetmacro{\xcompinner}{\rveinner*cos(\azim)}
+	\pgfmathsetmacro{\ycompinner}{\rveinner*sin(\azim)}
+	\pgfmathsetmacro{\zcompinner}{\rveinner*tan{\elhang}}
+	
+	\pgfmathsetmacro{\raan}{40} % RAAN
+	\pgfmathsetmacro{\incli}{-22} % Inclination
+	\pgfmathsetmacro{\rvecorbit}{13}
+	
+	\begin{tikzpicture}[scale=1,tdplot_main_coords]
+	\coordinate (O) at (0,0,0);
+	\coordinate (Oel) at (0,0,\elh);
+	\coordinate (Oelinner) at (0,0,\zcompinner);
+	%\draw
+	%determine a coordinate (P) using (r,\theta,\phi) coordinates.  This command
+	%also determines (Pxy), (Pxz), and (Pyz): the xy-, xz-, and yz-projections
+	%of the point (P).
+	%syntax: \tdplotsetcoord{Coordinate name without parentheses}{r}{\theta}{\phi}
+		
+	%draw the main coordinate system axes
+	\draw[thick,->] (0,0,0) -- (\rvec,0,0) node[anchor=north east]{$x$};
+	\draw[thick,->] (0,0,0) -- (0,\rvec/3,0) node[anchor=north west]{$y$};
+	\draw[thick,->] (0,0,0) -- (0,0,\rvec/4) node[anchor=south]{$z$};
+	
+	%draw the angle \phi, and label it
+	%syntax: \tdplotdrawarc[coordinate frame, draw options]{center point}{r}{angle}{label options}{label}
+	\tdplotdrawarc[very thick,color=RoyalBlue]{(O)}{\rve}{0}{\azim}%
+	{above}{}
+	\tdplotdrawarc[thick,<->,color=Black]{(O)}{\rve+0.75}{0}{\azim}%
+	{below right}{Azimuth beamwidth $ = \Theta_{3~\mathrm{dB}}$}
+	\tdplotdrawarc[very thick,color=RoyalBlue]{(Oel)}{\rve}{0}{\azim}%
+	{above}{}
+	\draw[very thick, color=RoyalBlue] (\rve,0,0) -- (\rve,0,\elh);
+	\draw[very thick, color=RoyalBlue] (\xcomp,\ycomp,0) -- (\xcomp,\ycomp,\elh);	
+	\draw[very thick,dashed,color=RoyalBlue] (\rveinner,0,0) -- (\rve,0,0);
+	\draw[very thick,dashed,color=Black] (\rveinner,0,0) -- (O);
+	\draw[very thick,dashed,color=Black] (\xcompinner,\ycompinner,\zcompinner) -- (O);
+	\draw[very thick,dashed,color=Black] (\xcompinner,\ycompinner,0) -- (O);
+	\draw[very thick,dashed,color=RoyalBlue] (\xcompinner,\ycompinner,0) -- (\xcomp,\ycomp,0);
+	\draw[very thick,color=RoyalBlue] (\rveinner,0,0) -- (\rveinner,0,\zcompinner);
+	\draw[very thick,color=RoyalBlue,dashed] (\xcompinner,\ycompinner,0) -- (\xcompinner,\ycompinner,\zcompinner);
+	
+	\tdplotdrawarc[very thick,dashed,color=RoyalBlue]{(O)}{\rveinner}{0}{\azim}%
+	{above}{}
+	\tdplotdrawarc[very thick,color=RoyalBlue]{(Oelinner)}{\rveinner}{0}{\azim}%
+	{above}{}
+	
+	\draw[very thick,color=RoyalBlue] (\rveinner,0,\zcompinner) -- (\rve,0,\elh);
+	\draw[very thick,color=RoyalBlue] (\xcompinner,\ycompinner,\zcompinner) -- (\xcomp,\ycomp,\elh);
+	\draw[very thick,color=Black,dashed] (\rveinner,0,\zcompinner) -- (O);
+	
+	\draw[decoration={brace,mirror,raise=8pt},decorate](\xcomp,\ycomp,0) -- node[right=12pt] {Elevation beamwidth $ = \Theta_{3~\mathrm{dB}}$} (\xcomp,\ycomp,\elh);
+	
+	\tdplotsetrotatedcoords{\raan}{\incli}{0}
+	\tdplotdrawarc[Red,tdplot_rotated_coords,thick,dotted]{(O)}{\rvecorbit}{-60}{-50}{}{}
+	\tdplotdrawarc[Red,tdplot_rotated_coords,thick]{(O)}{\rvecorbit}{-50}{-36}{}{}
+	\tdplotdrawarc[Red,tdplot_rotated_coords,thick,dotted]{(O)}{\rvecorbit}{-36}{-15}{anchor=north west, color = black}{RSO trajectory};
+
+     
+	
+	\end{tikzpicture}
+\end{document}

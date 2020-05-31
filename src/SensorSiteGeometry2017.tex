@@ -1,0 +1,74 @@
+% Emulates figure 6-4 in Vallado's book
+% 23 February 2016
+\documentclass{standalone}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc,fadings,decorations.pathreplacing,arrows}
+\begin{document}
+
+
+%set the plot display orientation
+%syntax: \tdplotsetdisplay{\theta_d}{\phi_d}
+\tdplotsetmaincoords{60}{110}
+
+\pgfmathsetmacro{\rvec}{1}
+\pgfmathsetmacro{\thetavec}{55}
+\pgfmathsetmacro{\phivec}{45}
+\pgfmathsetmacro{\sine}{\rvec*cos(\phivec)*sin(\thetavec)}
+\pgfmathsetmacro{\cosine}{\rvec*cos(\phivec)*cos(\thetavec)}
+
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0);
+\coordinate (Py) at (0,\sine,0);
+\coordinate (Px) at (\cosine,0,0);
+%\coordinate (Pyy) at (0.5*\cosine,\sine,0);
+
+%\draw
+%determine a coordinate (P) using (r,\theta,\phi) coordinates.  This command
+%also determines (Pxy), (Pxz), and (Pyz): the xy-, xz-, and yz-projections
+%of the point (P).
+%syntax: \tdplotsetcoord{Coordinate name without parentheses}{r}{\theta}{\phi}
+\tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+
+%draw the main coordinate system axes
+\draw[thick,->] (0,0,0) -- (0.7,0,0) node[anchor=north east]{$x_\text{SEZ}$};
+\draw[thick,->] (0,0,0) -- (0,0.7,0) node[anchor=north west]{$y_\text{SEZ}$};
+\draw[thick,->] (0,0,0) -- (0,0,0.6) node[anchor=south]{$z_\text{SEZ}$};
+\draw[thick,dashed] (0,0,0) -- (-.4,0,0) node[anchor=north west]{};
+
+%draw a vector from origin to point (P) 
+\draw[-stealth,thick,color=Green] (O) -- (P)node[anchor=west]{\small{RSO}};
+
+\node[above right] at (0.3,0.3,0.2){$\rho$};
+
+\node[above right] at (0.15,-0.1,0){$\mathbf{Rx}$};
+
+%draw projection on xy plane, and a connecting line
+\draw[dashed,thick, color=Green] (O) -- (Pxy);
+\draw[dashed,thick, color=Green] (P) -- (Pxy);
+\draw[dashed,thick,color=RoyalBlue] (Pxy) -- (Py) node[anchor= south west]{};
+\draw[dashed,thick,color=RoyalBlue] (Pxy) -- (Px)node[anchor= south east]{};
+%
+%\node[rotate= \thetavec] at (Pyy) {\small{$\rho \cos (\theta) \cos (\psi)$}};
+%$\rho \cos (\theta) \cos (\psi)$
+
+%draw the angle \phi, and label it
+%syntax: \tdplotdrawarc[coordinate frame, draw options]{center point}{r}{angle}{label options}{label}
+\tdplotdrawarc[->]{(O)}{0.2}{0}{\phivec}%
+{below}{$\psi$}
+
+\tdplotsetthetaplanecoords{\phivec}
+
+\tdplotdrawarc[tdplot_rotated_coords,<-]{(O)}{0.27}{\thetavec}%
+{90}{below right}{$\theta$}
+
+%%set the rotated coordinate system so the x'-y' plane lies within the
+%%"theta plane" of the main coordinate system
+%\tdplotsetthetaplanecoords{\thetavec}
+
+\end{tikzpicture}
+\end{document}
+

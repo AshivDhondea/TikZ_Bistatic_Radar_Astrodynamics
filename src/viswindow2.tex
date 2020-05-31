@@ -1,0 +1,68 @@
+\documentclass[landscape,12pt]{standalone}
+\usepackage[utf8x]{inputenc} % utf8 encoding
+\usepackage[T1]{fontenc} % use T1 fonts
+\usepackage{bm} % bold math
+\usepackage[dvipsnames]{xcolor}   
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,shadows}
+\usepackage{amsmath,bm,times,amssymb}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\usetikzlibrary{decorations.pathmorphing} % for snake lines
+\usetikzlibrary{matrix} % for block alignment
+\usetikzlibrary{calc} % for manimulation of coordinates
+
+\usetikzlibrary{shapes.geometric}
+
+% TikZ styles for drawing
+\tikzstyle{block} = [draw,rectangle,thick,minimum height=4.em,minimum width=7.5em,  text width=10em,text centered,drop shadow, fill =Melon!20]
+\tikzstyle{sum} = [draw,circle,inner sep=0mm,minimum size=2mm]
+\tikzstyle{connector} = [->,thick]
+\tikzstyle{line} = [thick]
+\tikzstyle{branch} = [circle,inner sep=0pt,minimum size=1mm,fill=black,draw=black]
+\tikzstyle{guide} = []
+\tikzstyle{snakeline} = [connector, decorate, decoration={pre length=0.2cm,
+                         post length=0.2cm, snake, amplitude=.4mm,
+                         segment length=2mm},thick, OliveGreen, ->]
+
+\tikzstyle{io} = [draw,trapezium, trapezium left angle=70, trapezium right angle=110,thick ,minimum height=1.9em,text width=12em,text centered,drop shadow,fill=Cerulean!20]
+
+\renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}} % bold vectors
+\def \myneq {\skew{-2}\not =} % \neq alone skews the dash
+
+\begin{document}
+
+  \begin{tikzpicture}[scale=1, auto, >=stealth']
+    \small
+    % node placement with matrix library: 5x4 array
+    \matrix[ampersand replacement=\&, row sep=0.2cm, column sep=0.5cm] {
+      %
+      \node[io] (F1) {\textbf{Input TLE}}; \&
+      \&
+      \node[block] (f1) {\textbf{Orbit Propagation}}; \& 
+      \&
+      \node[block] (f2) {\textbf{Passage Identification}};\&
+      \&
+      \node[io] (f3) {\textbf{Visibility window interval}};\&
+      \\
+      \node[guide] (i1) {}; \& \& \& \& \\
+    };
+
+    % now link the nodes
+   % \draw [line] (F1) -- (u1);
+    \draw [connector] (F1) -- node {} (f1);
+
+    \draw [connector] (f1) -- node {} (f2);
+    \draw [connector] (f2) -- node {} (f3);
+    
+
+
+
+  \end{tikzpicture}
+
+\end{document}

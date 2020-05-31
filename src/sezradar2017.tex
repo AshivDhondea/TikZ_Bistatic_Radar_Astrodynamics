@@ -1,0 +1,120 @@
+% Author: Ashiv Dhondea
+% Radar Remote Sensing Group
+% UCT.
+% July 2015
+% Edited: 14 September 2015
+% Built from: http://www.texample.net/tikz/examples/the-3dplot-package/
+% edited: 21 feb 2016,23  feb 2016
+%%
+\documentclass{standalone}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc,fadings,decorations.pathreplacing}
+\begin{document}
+
+%Angle Definitions
+%-----------------
+
+%set the plot display orientation
+%syntax: \tdplotsetdisplay{\theta_d}{\phi_d}
+\tdplotsetmaincoords{60}{110}
+
+\pgfmathsetmacro{\rvec}{.9}
+\pgfmathsetmacro{\thetavec}{30}
+\pgfmathsetmacro{\phivec}{60}
+
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0);
+%\draw
+%determine a coordinate (P) using (r,\theta,\phi) coordinates.  This command
+%also determines (Pxy), (Pxz), and (Pyz): the xy-, xz-, and yz-projections
+%of the point (P).
+%syntax: \tdplotsetcoord{Coordinate name without parentheses}{r}{\theta}{\phi}
+\tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+
+%draw figure contents
+%--------------------
+
+%draw the main coordinate system axes
+\draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x_\text{ECEF}$};
+\draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y_\text{ECEF}$};
+\draw[thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z_\text{ECEF}$};
+
+%draw a vector from origin to point (P) 
+\draw[-stealth,thick,color=Red] (O) -- (P);
+
+%draw projection on xy plane, and a connecting line
+\draw[dashed,thick, color=Red] (O) -- (Pxy);
+\draw[dashed,thick,color=Red] (P) -- (Pxy);
+
+%draw the angle \phi, and label it
+%syntax: \tdplotdrawarc[coordinate frame, draw options]{center point}{r}{angle}{label options}{label}
+%\tdplotdrawarc[->]{(O)}{0.15}{0}{\phivec}{anchor=north}{$\lambda$}
+
+
+%set the rotated coordinate system so the x'-y' plane lies within the
+%"theta plane" of the main coordinate system
+%syntax: \tdplotsetthetaplanecoords{\phi}
+\tdplotsetthetaplanecoords{\phivec}
+
+%draw theta arc and label, using rotated coordinate system
+%\tdplotdrawarc[tdplot_rotated_coords,->]{(O)}{0.3}{0}{\thetavec}{anchor=south west}{$\phi_{gd}$}
+
+%\tdplotdrawarc[tdplot_rotated_coords,<-]{(O)}{0.2}{\thetavec}%
+%{90}{right}{$\phi_\text{gc}$}
+
+%draw some dashed arcs, demonstrating direct arc drawing
+\draw[dashed,tdplot_rotated_coords] (\rvec,0,0) arc (0:90:\rvec);
+\draw[dashed] (\rvec,0,0) arc (0:90:\rvec);
+
+%set the rotated coordinate definition within display using a translation
+%coordinate and Euler angles in the "z(\alpha)y(\beta)z(\gamma)" euler rotation convention
+%syntax: \tdplotsetrotatedcoords{\alpha}{\beta}{\gamma}
+\tdplotsetrotatedcoords{\phivec}{\thetavec}{0}
+
+%translate the rotated coordinate system
+%syntax: \tdplotsetrotatedcoordsorigin{point}
+\tdplotsetrotatedcoordsorigin{(P)}
+
+%use the tdplot_rotated_coords style to work in the rotated, translated coordinate frame
+
+\draw[thick,RoyalBlue,tdplot_rotated_coords,->] (0,0,0) -- (.7,0,0) node[anchor=north west]{$x_\text{SEZ}$};
+\node[anchor=east,tdplot_rotated_coords,RoyalBlue] at (0,-0.1,0){$\mathbf{Rx}$};
+\draw[thick,RoyalBlue,dashed,tdplot_rotated_coords] (0,0,0) -- (-.4,0,0) node[anchor=north west]{};
+\draw[thick,RoyalBlue,tdplot_rotated_coords,->] (0,0,0) -- (0,.7,0) node[anchor=west]{$y_\text{SEZ}$};
+\draw[thick,RoyalBlue,tdplot_rotated_coords,->] (0,0,0) -- (0,0,.7) node[anchor=south]{$z_\text{SEZ}$};
+
+%WARNING:  coordinates defined by the \coordinate command (eg. (O), (P), etc.)
+%cannot be used in rotated coordinate frames.  Use only literal coordinates.  
+
+%draw some vector, and its projection, in the rotated coordinate frame
+\draw[-stealth,thick,color=Green,tdplot_rotated_coords] (0,0,0) -- (.5,.5,.5)node[anchor=west]{SO};
+\draw[black,tdplot_rotated_coords] (.3,.3,.3) node[anchor=north west]{$\rho$};
+\draw[dashed,thick,color=Green,tdplot_rotated_coords] (0,0,0) -- (.5,.5,0);
+\draw[dashed,thick,color=Green,tdplot_rotated_coords] (.5,.5,0) -- (.5,.5,.5);
+
+%show its phi arc and label
+
+%draw theta arc and label
+\tdplotdrawarc[tdplot_rotated_coords,color=black,->]{(0,0,0)}{0.1}{0}{45}{anchor=north west,color=black}{$\psi$}
+
+%change the rotated coordinate frame so that it lies in its theta plane.
+%Note that this overwrites the original rotated coordinate frame
+%syntax: \tdplotsetrotatedthetaplanecoords{\phi'}
+%\tdplotsetrotatedthetaplanecoords{90}
+%
+%%%draw theta arc and label
+%%\tdplotdrawarc[tdplot_rotated_coords,color=darkgreen,->]{(0,0,0)}{0.2}{0}{90}{anchor=south west,color=black}{$\psi$}
+%
+%\tdplotdrawarc[tdplot_rotated_coords,color=black,->]{(0,0,0)}{0.4}{30}{0}{anchor=north west,color=black}{$\theta$}
+
+\tdplotsetrotatedthetaplanecoords{45}
+
+%draw theta arc and label
+\tdplotdrawarc[tdplot_rotated_coords,color=black,->]{(0,0,0)}{0.25}{90}{55}{anchor=west,color=black}{$\theta$}
+\end{tikzpicture}
+\end{document}
+

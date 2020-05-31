@@ -1,0 +1,88 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,amsmath}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{shapes,calc,positioning}
+\usetikzlibrary{fadings,decorations.pathreplacing,arrows}
+\begin{document}
+
+\tdplotsetmaincoords{75}{95}
+%
+\pgfmathsetmacro{\rvec}{.8}
+\pgfmathsetmacro{\thetavec}{40}
+\pgfmathsetmacro{\omegavec}{28}
+%
+\pgfmathsetmacro{\tgtx}{.45}
+\pgfmathsetmacro{\tgty}{.4}
+\pgfmathsetmacro{\tgtz}{.5}
+
+\pgfmathsetmacro{\txx}{.55}
+\pgfmathsetmacro{\txy}{.7}
+\pgfmathsetmacro{\txz}{-0.1}
+
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0);
+
+\draw[semithick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x_\text{ECEF}$};
+\draw[semithick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y_\text{ECEF}$};
+\draw[semithick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z_\text{ECEF}$};
+
+\tdplotsetcoord{P}{\rvec}{\thetavec}{\omegavec}
+\draw[-stealth,semithick,color=Black] (O) -- (P);
+\draw[dashed,semithick, color=Black, shorten >=-20pt ] (O) -- (Pxy);
+%\tdplotdrawarc[->]{(O)}{0.3}{0}{\omegavec}{anchor=north}{$\lambda$}
+\tdplotdrawarc[Gray]{(O)}{0.8}{-90}{90}{}{}
+\tdplotdrawarc[dashed,Gray]{(O)}{0.8}{90}{270}{}{}
+%
+\tdplotsetthetaplanecoords{\omegavec}
+%\tdplotdrawarc[tdplot_rotated_coords,<-]{(0,0,0)}{0.4}{\thetavec}%
+%{90}{right}{$\phi_\text{gc}$}
+\tdplotdrawarc[tdplot_rotated_coords]{(0,0,0)}{0.8}
+{0}{90}{}{}
+%
+\tdplotsetthetaplanecoords{0}
+\tdplotdrawarc[tdplot_rotated_coords]{(0,0,0)}{0.8}{0}{90}{left}{\rotatebox[origin=cc]{85}{}}
+%
+\tdplotsetthetaplanecoords{90}
+\tdplotdrawarc[tdplot_rotated_coords,Gray]{(0,0,0)}{0.8}
+{0}{360}{}{}
+%
+\tdplotsetrotatedcoords{\omegavec}{\thetavec}{0}
+\tdplotsetrotatedcoordsorigin{(P)}
+
+%\draw[thick,tdplot_rotated_coords,-,draw=Blue,fill=white] (-0.1,-0.1,0)
+%-- (-0.1,0.1,0) -- (0.1,0.1,0)  -- (0.1,-0.1,0)  -- cycle  ;
+
+\draw[very thick,tdplot_rotated_coords,->,Black] (0,0,0)
+-- (0.75,0,0) node[anchor=west]{$x_{\text{SEZ}}$};
+\draw[very thick,tdplot_rotated_coords,->,Black] (0,0,0)
+-- (0,0.75,0) node[anchor=south]{$y_{\text{SEZ}}$};
+\draw[very thick,tdplot_rotated_coords,->,Black] (0,0,0)
+-- (0,0,0.75) node[anchor=south]{$z_{\text{SEZ}}$};
+
+\node[anchor=east,tdplot_rotated_coords,Black] at (0,-0.1,0){\textbf{Rx}};
+
+%draw some vector, and its projection, in the rotated coordinate frame
+\draw[->,shorten >=0.2cm,ultra thick,color=Blue,tdplot_rotated_coords] (0,0,0) -- (\tgtx,\tgty,\tgtz)node[anchor=south]{\textbf{RSO}};
+%\draw[black,tdplot_rotated_coords] (.1,.1,.1) node[anchor=north west]{$\rho$};
+
+\shade[tdplot_rotated_coords,ball color = Red] (\tgtx,\tgty,\tgtz) circle (0.03);
+%\draw[dashed,thick,color=Gray,tdplot_rotated_coords] (0,0,0) -- (\tgtx,\tgty,0);
+%\draw[dashed,thick,color=Gray,tdplot_rotated_coords] (.3,.4,0) -- (\tgtx,\tgty,\tgtz);
+
+
+\draw[->,shorten >=0.2cm,ultra thick,color=OliveGreen,tdplot_rotated_coords] (\txx,\txy,\txz) -- (\tgtx,\tgty,\tgtz)node[anchor=south]{};
+
+\draw[very thick,tdplot_rotated_coords,shorten >=0.15cm,->] (0,0,0) -- (\txx,\txy,\txz) node[anchor=north west ]{\textbf{Tx}};
+\draw[tdplot_rotated_coords,decoration={brace,mirror,raise=8pt},decorate](0,0,0) -- node[below =7pt] {$L_b$} (\txx,\txy,\txz);
+
+
+%%draw theta arc and label
+%\tdplotdrawarc[tdplot_rotated_coords,color=Black,->]{(0,0,0)}{0.1}{0}{45}{anchor=north west,color=black}{$\psi$}
+%\tdplotsetrotatedthetaplanecoords{45}
+%
+%%draw theta arc and label
+%\tdplotdrawarc[tdplot_rotated_coords,color=Black,->]{(0,0,0)}{0.25}{90}{55}{anchor=west,color=black}{$\theta$}
+\end{tikzpicture}
+
+\end{document}

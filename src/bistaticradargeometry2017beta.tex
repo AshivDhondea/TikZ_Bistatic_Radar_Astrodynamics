@@ -1,0 +1,101 @@
+% Emulates figure 6-4 in Vallado's book
+% 23 February 2016
+\documentclass{standalone}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc,fadings,decorations.pathreplacing,arrows}
+\usetikzlibrary{angles,quotes}
+\begin{document}
+
+
+%set the plot display orientation
+%syntax: \tdplotsetdisplay{\theta_d}{\phi_d}
+\tdplotsetmaincoords{60}{110}
+
+\pgfmathsetmacro{\rvec}{1.6}
+\pgfmathsetmacro{\thetavec}{45}
+\pgfmathsetmacro{\phivec}{60}
+\pgfmathsetmacro{\sine}{\rvec*cos(\phivec)*sin(\thetavec)}
+\pgfmathsetmacro{\cosine}{\rvec*cos(\phivec)*cos(\thetavec)}
+\pgfmathsetmacro{\height}{\rvec*sin(\phivec)}
+\pgfmathsetmacro{\betavec}{90}
+
+
+
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0);
+\coordinate (T) at (-1,1.1,-0.2);
+\coordinate (Py) at (0,\sine,0);
+\coordinate (Px) at (\cosine,0,0);
+%\coordinate (Pyy) at (0.5*\cosine,\sine,0);
+
+%\draw
+%determine a coordinate (P) using (r,\theta,\phi) coordinates.  This command
+%also determines (Pxy), (Pxz), and (Pyz): the xy-, xz-, and yz-projections
+%of the point (P).
+%syntax: \tdplotsetcoord{Coordinate name without parentheses}{r}{\theta}{\phi}
+\tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+
+%draw the main coordinate system axes
+\draw[thick,->] (0,0,0) -- (1.2,0,0) node[anchor=north east]{$x$};
+\draw[thick,->] (0,0,0) -- (0,1.6,0) node[anchor=north west]{$y$};
+\draw[thick,->] (0,0,0) -- (0,0,1.1) node[anchor=south]{$z$};
+
+\draw[very thick,shorten >=0.15cm,->] (O) -- (T) node[anchor=south]{};
+
+%draw a vector from origin to point (P) 
+\draw[very thick,color=Blue,shorten <=0.1cm,shorten >=0.2cm,->] (O) -- (P)node[anchor=south east]{};
+\node[above=7pt] at (P){\textbf{RSO}};
+
+%\node[above right] at (0.3,0.3,0.2){$\rho$};
+
+\node[above right] at (0.15,-0.15,0){\textbf{Rx}};
+\node[ right] at (T){\textbf{Tx}};
+%\node[above ] at (Rxmid){$\rho_\mathbf{Rx}$};
+
+\draw[very thick,color=OliveGreen,shorten <=0.1cm,shorten >=0.2cm,->] (T) -- (P)node[anchor=south east]{};
+
+\draw[decoration={brace,raise=8pt},decorate](O) -- node[above left=7pt] {$\rho_\mathbf{Rx}$} (P);
+\draw[decoration={brace,mirror,raise=8pt},decorate](T) -- node[above right=7pt] {$\rho_\mathbf{Tx}$} (P);
+\draw[decoration={brace,mirror,raise=8pt},decorate](O) -- node[below =7pt] {$L_b$} (T);
+
+%draw projection on xy plane, and a connecting line
+\draw[dashed,thick, color=Gray] (O) -- (Pxy);
+\draw[dashed,thick, color=Gray] (P) -- (Pxy);
+\draw[dashed,thick,color=Gray] (Pxy) -- (Py) node[anchor= south west]{};
+\draw[dashed,thick,color=Gray] (Pxy) -- (Px)node[anchor= south east]{};
+%
+%\node[rotate= \thetavec] at (Pyy) {\small{$\rho \cos (\theta) \cos (\psi)$}};
+%$\rho \cos (\theta) \cos (\psi)$
+
+%draw the angle \phi, and label it
+%syntax: \tdplotdrawarc[coordinate frame, draw options]{center point}{r}{angle}{label options}{label}
+\tdplotdrawarc[->,semithick,color=RoyalBlue]{(O)}{0.5}{0}{\phivec}%
+{above}{$\psi_\mathbf{Rx}$}
+
+\tdplotsetthetaplanecoords{\phivec}
+\tdplotdrawarc[tdplot_rotated_coords,semithick,<-,color=RoyalBlue]{(O)}{0.5}{1.03*\thetavec}%
+{90}{above left=6pt}{$\theta_\mathbf{Rx}$}
+
+
+\shade[tdplot_screen_coords,ball color = Red] (P) circle (0.03);
+
+\node[draw=OliveGreen,shape=circle,fill=none,inner sep=0.06 cm] (itx) at (T){};
+\node[draw=Blue,shape=circle,fill=Blue,inner sep=0.06 cm] (irx) at (O){};
+
+\pic [draw,semithick,<->,angle radius=.5cm,angle eccentricity=1.5,color=Red,"$\beta$"{anchor=east,text=Red}] 
+{angle = O--P--T};
+
+
+
+%set the rotated coordinate definition within display using a translation
+%coordinate and Euler angles in the "z(\alpha)y(\beta)z(\gamma)" euler rotation convention
+%syntax: \tdplotsetrotatedcoords{\alpha}{\beta}{\gamma}
+
+
+\end{tikzpicture}
+\end{document}
+
